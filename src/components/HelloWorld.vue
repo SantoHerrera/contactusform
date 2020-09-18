@@ -7,7 +7,12 @@
     <br />
     <input v-model="birthDate" placeholder="Enter birth date" />
     <br />
+    <input type="checkbox" id="checkbox" v-model="isChecked" />
+    <p v-if="isChecked">I agree to be contacted via email</p>
+    <p v-else>I don't agree to be contacted via email</p>
+    <br />
     <button v-on:click="main">Submit</button>
+    <button v-on:click="clearEverything">clear</button>
   </div>
 </template>
 
@@ -16,75 +21,40 @@ export default {
   name: "HelloWorld",
   props: {
     msg: String,
-    // name: String,
-    // email: String,
-    // birthDate: String
   },
   data: function () {
     return {
       name: "",
       email: "",
       birthDate: "",
-      isValid: {
-        name: false,
-        email: false
-        // birthDate: false,
-      },
       isNameValid: false,
-      isEmailValid: false
+      isEmailValid: false,
+      isChecked: false
     };
   },
   methods: {
     main: function () {
-      // console.log(this.changeValidStatus(this.isValidName, this.name))
-      // const validName = this.changeValidStatus(this.isValidName, this.name)
-      // this.valid.name = validName
-      // this.isNameValid = true;
-      // this.isEmailValid = true;
+      this.isNameValid = this.changeValidStatus(this.isValidName, this.name);
 
-      this.isNameValid = this.changeValidStatus(this.isValidName, this.name)
+      this.isEmailValid = this.changeValidStatus(this.isValidEmail, this.email);
 
-      this.isEmailValid = this.changeValidStatus(this.isValidEmail, this.email)
-
-      if(this.isEverythingValid()) {
-        alert("shit worked")
+      if (this.isEverythingValid([this.isNameValid, this.isEmailValid, this.isChecked])) {
+        alert("shit worked");
       } else {
-        alert("please fill everything before submitting")
+        alert("please fill everything before submitting, dont forget to agree to be contacted. Date of birth can be left blank.");
       }
-
-
-    
     },
-    test: function() {
-      console.log(this.isEverythingValid())
+    test: function () {
+      console.log(this.isEverythingValid([]));
     },
-    isEverythingValid: function() {
-      const validInfo = [this.isNameValid, this.isEmailValid];
+    isEverythingValid: function (arr) {
+      const validInfo = arr;
+      // [this.isNameValid, this.isEmailValid, this.isChecked];
+      const isTrue = (e) => (e ? true : false);
 
-      for(let i = 0; i < validInfo.length; i++) {
-        if(validInfo[i] == false) {
-          return false
-        }
-      }
-
-      return true;
-
-      // console.log(validInfo.some((e) => {e = true;}))
-
-      // bject.keys(isValidInfo).forEach(function (key) {
-      //   console.log(key, isValidInfo[key]);
-      // }) 
-
-
-
-      // const isValidInfo = this.isValid
-
-      // Object.keys(isValidInfo).forEach(function (key) {
-      //   console.log(key, isValidInfo[key]);
-
-      // }) 
+      return validInfo.every(isTrue);
     },
-    changeValidStatus: function(test, element) {
+    changeValidStatus: function (test, element) {
       return test(element);
     },
     isValidName: function (name) {
@@ -96,12 +66,33 @@ export default {
       var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(elementValue);
     },
+    clearEverything: function () {
+      this.name = "";
+      this.email = "";
+      this.birthDate = "";
+      this.isChecked = false;
+    },
   },
 };
-//on submit chekc if name, email, birthdate are valid -
+//on submit chekc if naFFme, email, birthdate are valid -
 //if they all return true then and post do the post
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>
+
+
+<!-- 
+what it needs 
+---1. user name - cannot be blank 
+---2. email - cannot be nlank and must be a valid email address
+3. birth date - can be blank
+             if not empty, the input must be a valid date
+---4. check box - afreement ot be contacted - MUST BE CHECKKED
+
+---5. submit button is disabl;e if anay of the previous fields are invalid
+---6. form has a clear button that clears the rest of the of the form
+7. to submit he from, make an http post request to 
+ const httpPostRequest = https://my-json-server.typicode.com/JustUtahCoders/interview-users-api/users 
+-->
