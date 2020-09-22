@@ -5,11 +5,14 @@
     <br />
     <input v-model="email" placeholder="Enter valid email" />
     <br />
-    <input v-model="birthDate" placeholder="Enter birth date" />
     <br />
-    <input type="checkbox" id="checkbox" v-model="isChecked" />
+    <p>Enter valid birth date</p>
+    <input type="date" v-model="birthDate" />
+    <br />
     <p v-if="isChecked">I agree to be contacted via email</p>
     <p v-else>I don't agree to be contacted via email</p>
+    <input type="checkbox" id="checkbox" v-model="isChecked" />
+    <br />
     <br />
     <button v-on:click="main">Submit</button>
     <button v-on:click="clearEverything">clear</button>
@@ -29,57 +32,70 @@ export default {
       birthDate: "",
       isNameValid: false,
       isEmailValid: false,
-      isChecked: false
+      isChecked: false,
     };
   },
-  methods: {
-    main: function () {
+  watch: {
+    name() {
       this.isNameValid = this.changeValidStatus(this.isValidName, this.name);
-
+    },
+    email() {
       this.isEmailValid = this.changeValidStatus(this.isValidEmail, this.email);
-
-      if (this.isEverythingValid([this.isNameValid, this.isEmailValid, this.isChecked])) {
-        alert("shit worked");
-      } else {
-        alert("please fill everything before submitting, dont forget to agree to be contacted. Date of birth can be left blank.");
-      }
     },
-    test: function () {
-      console.log(this.isEverythingValid([]));
-    },
-    isEverythingValid: function (arr) {
-      const validInfo = arr;
-      // [this.isNameValid, this.isEmailValid, this.isChecked];
-      const isTrue = (e) => (e ? true : false);
-
-      return validInfo.every(isTrue);
-    },
-    changeValidStatus: function (test, element) {
-      return test(element);
-    },
-    isValidName: function (name) {
-      //returns true if string is filled, makes it so string filled with empty space returns false
-      return /\S/.test(name);
-    },
-    isValidEmail: function (elementValue) {
-      //got this from http://zparacha.com/validate-email-address-using-javascript-regular-expression
-      var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(elementValue);
-    },
-    clearEverything: function () {
-      this.name = "";
-      this.email = "";
-      this.birthDate = "";
-      this.isChecked = false;
+    birthDate() {
+      //check if valid birthdate
+      //change valid status of birthdateS
+      console.log("do stuff");
+      //
     },
   },
-};
-//on submit chekc if naFFme, email, birthdate are valid -
-//if they all return true then and post do the post
-</script>
+    methods: {
+      main: function () {
+        //needs birthdate 
+        if (
+          this.isEverythingValid([
+            this.isNameValid,
+            this.isEmailValid,
+            this.isChecked,
+          ])
+        ) {
+          //do http post stuff
+          alert("shit worked");
+        } else {
+          alert(
+            "please fill everything before submitting, dont forget to agree to be contacted. Date of birth can be left blank."
+          );
+        }
+      },
+      isEverythingValid: function (arr) {
+        const isTrue = (e) => (e ? true : false);
 
+        return arr.every(isTrue);
+      },
+      changeValidStatus: function (test, element) {
+        return test(element);
+      },
+      isValidName: function (name) {
+        //returns true if string is filled, makes it so string filled with empty space returns false
+        return /\S/.test(name);
+      },
+      isValidEmail: function (elementValue) {
+        //got this from http://zparacha.com/validate-email-address-using-javascript-regular-expression
+        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailPattern.test(elementValue);
+      },
+      clearEverything: function () {
+        this.name = "";
+        this.email = "";
+        this.birthDate = "";
+        this.isChecked = false;
+      },
+    },
+  }
+</script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>
 
 
@@ -96,3 +112,25 @@ what it needs
 7. to submit he from, make an http post request to 
  const httpPostRequest = https://my-json-server.typicode.com/JustUtahCoders/interview-users-api/users 
 -->
+
+<!--
+this might work for birth date stuff
+got it from https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
+
+<input id="datefield" type='date' min='1899-01-01' max='2000-13-13'></input>
+
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+ if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+
+today = yyyy+'-'+mm+'-'+dd;
+document.
+
+ -->
